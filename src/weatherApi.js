@@ -5,9 +5,4 @@ async function getWeather(city) {
     return weatherData
 }
 
-async function weatherName(city) {
-    const weatherData = await getWeather(city)
-    return weatherData.weather[0].main
-}
-
-export {getWeather, weatherName}
+export default getWeather

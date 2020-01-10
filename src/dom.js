@@ -1,10 +1,7 @@
-import * as data from './weatherApi';
+import getWeather from './weatherApi';
 import weatherGiphy from './giphy';
 
-const output = async function() {
-    const cityField = document.getElementById('city');
-    const city = cityField.value.toLowerCase();
-    const weatherData = await data.getWeather(city)
+const output = async function(weatherData) {
     const kelvin = parseFloat(weatherData.main.temp).toFixed(2);
 
     document.getElementById('celsius').innerHTML = 'Celsius: ' + (kelvin - 273.15).toFixed(1);
@@ -14,12 +11,12 @@ const output = async function() {
 
 const init = () => {
     const cityField = document.getElementById('city');
-    const city = cityField.value;
     const submit = document.getElementById('submit');
     submit.onclick = async function() {
-        console.log(typeof city)
-        const weatherName = await data.weatherName(city);
-        await output();
+        const city = cityField.value.toLowerCase();
+        const weatherData = await getWeather(city);
+        const weatherName = weatherData.weather[0].main
+        await output(weatherData);
         await weatherGiphy(city, weatherName);
     }
 }
