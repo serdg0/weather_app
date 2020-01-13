@@ -22,9 +22,9 @@ async function init() {
       await output(weatherData);
       await weatherGiphy(weatherName);
     } else {
-      const errorGif  = await fetch(`https://api.giphy.com/v1/gifs/HKmW8g1pG0Rig?api_key=${key}`);
+      const errorGif = await fetch(`https://api.giphy.com/v1/gifs/HKmW8g1pG0Rig?api_key=${key}`);
       const errorData = await errorGif.json();
-      document.getElementById('weather').src = errorData.data.images.original.url;;
+      document.getElementById('weather').src = errorData.data.images.original.url;
       document.getElementById('celsius').innerHTML = 'FAILED TASK BRO/SIS';
       document.getElementById('description').innerHTML = '';
       document.getElementById('fahrenheit').innerHTML = '';
