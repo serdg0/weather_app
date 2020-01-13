@@ -2,7 +2,7 @@ import getWeather from './weatherApi';
 import weatherGiphy from './giphy';
 
 
-const output = async function (weatherData) {
+async function output(weatherData) {
   const kelvin = parseFloat(weatherData.main.temp).toFixed(2);
 
   document.getElementById('celsius').innerHTML = `Celsius: ${(kelvin - 273.15).toFixed(1)}`;
