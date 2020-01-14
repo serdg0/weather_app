@@ -1,6 +1,13 @@
 import getWeather from './weatherApi';
 import weatherGiphy from './giphy';
 
+const radioForm = (kelvin) => {
+  const radioCelsius = document.getElementById('celsius');
+  const radioFahren = document.getElementById('fahrenheit');
+  const output = document.getElementById('output');
+  radioCelsius.onclick = () => output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C`;
+  radioFahren.onclick = () => output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`;
+}
 
 async function output(weatherData) {
   const kelvin = parseFloat(weatherData.main.temp).toFixed(2);
@@ -8,14 +15,6 @@ async function output(weatherData) {
   document.getElementById('description').innerHTML = `Status: ${weatherData.weather[0].description}`;
   (document.getElementById('celsius').checked) ? output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C` : output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`;
   radioForm(kelvin)
-}
-
-const radioForm = (kelvin) => {
-  const radioCelsius = document.getElementById('celsius');
-  const radioFahren = document.getElementById('fahrenheit');
-  const output = document.getElementById('output');
-  radioCelsius.onclick = () => output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C`;
-  radioFahren.onclick = () => output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`;
 }
 
 async function button() {
