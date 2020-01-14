@@ -13,7 +13,11 @@ async function output(weatherData) {
   const kelvin = parseFloat(weatherData.main.temp).toFixed(2);
   const output = document.getElementById('output');
   document.getElementById('description').innerHTML = `Status: ${weatherData.weather[0].description}`;
-  (document.getElementById('celsius').checked) ? output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C` : output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`;
+  if (document.getElementById('celsius').checked) {
+    output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C`;
+  } else {
+    output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`;
+  }
   radioForm(kelvin);
 }
 
