@@ -32,3 +32,8 @@ input:hover {
 button {
     background-color: rgba(255,0,0,0.6);
 }
+
+#output {
+    display: flex;
+    justify-content: center;
+}
