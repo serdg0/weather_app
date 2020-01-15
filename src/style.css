@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'pelaa';
+    src: url('./Matiz.ttf');
+}
+* {
+    font-family: 'pelaa';
+    color: orangered;
+}
+body {
+    background-image: linear-gradient(to right, #E0EAFC, #CFDEF3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input:invalid {
+    border: 3px dashed red;
+}
+
+img:before {
+    display: none;
+}
+
+input:valid {
+    color: goldenrod;
+}
+
+input:hover {
+    background-image: linear-gradient(to right, #E0EAFC, #CFDEF3);
+}
+
+button {
+    background-color: rgba(255,0,0,0.6);
+}
+
+#output {
+    display: flex;
+    justify-content: center;
+}
