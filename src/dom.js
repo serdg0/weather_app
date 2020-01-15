@@ -1,4 +1,4 @@
-import getWeather from './weatherApi';
+import { getWeather, getGeoWeather } from './weatherApi';
 import weatherGiphy from './giphy';
 
 const radioForm = (kelvin) => {
@@ -47,9 +47,23 @@ async function init() {
   document.getElementById('celsius').checked = true;
   const submit = document.getElementById('submit');
   submit.onclick = () => button();
+  
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(async function(position) {
+    const lat = position.coords.latitude
+    const lon = position.coords.longitude
+    const geoData = await getGeoWeather(lat, lon);
+    const geoName = geoData.weather[0].main;
+    output(geoData);
+    await weatherGiphy(geoName);
+    document.getElementById('place').innerHTML = `${geoData.name}`;
+    })
+} else {
   const welcome = await fetch(`https://api.giphy.com/v1/gifs/ASd0Ukj0y3qMM?api_key=${key}`);
   const welcomeData = await welcome.json();
   document.getElementById('weather').src = welcomeData.data.images.original.url;
+}
+
 }
 
 export default init;
