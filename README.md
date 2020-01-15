@@ -3,6 +3,7 @@ Task from [The Odin Project](https://www.theodinproject.com/courses/javascript/l
 
 I worked with APIS, and with async functions.
 
+Check it [here](https://serdg0.github.io/weather_app/).
 
 ## Tools
 * [Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
