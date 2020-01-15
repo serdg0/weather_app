@@ -7,7 +7,7 @@ const radioForm = (kelvin) => {
   const output = document.getElementById('output');
   radioCelsius.onclick = () => { output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C`; };
   radioFahren.onclick = () => { output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`; };
-}
+};
 
 async function output(weatherData) {
   const kelvin = parseFloat(weatherData.main.temp).toFixed(2);
@@ -38,6 +38,7 @@ async function button() {
     document.getElementById('description').innerHTML = '';
     document.getElementById('fahrenheit').innerHTML = '';
   }
+  document.getElementById('place').innerHTML = '';
 }
 
 async function init() {
@@ -47,23 +48,22 @@ async function init() {
   document.getElementById('celsius').checked = true;
   const submit = document.getElementById('submit');
   submit.onclick = () => button();
-  
-if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(async function(position) {
-    const lat = position.coords.latitude
-    const lon = position.coords.longitude
-    const geoData = await getGeoWeather(lat, lon);
-    const geoName = geoData.weather[0].main;
-    output(geoData);
-    await weatherGiphy(geoName);
-    document.getElementById('place').innerHTML = `${geoData.name}`;
-    })
-} else {
-  const welcome = await fetch(`https://api.giphy.com/v1/gifs/ASd0Ukj0y3qMM?api_key=${key}`);
-  const welcomeData = await welcome.json();
-  document.getElementById('weather').src = welcomeData.data.images.original.url;
-}
 
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const geoData = await getGeoWeather(lat, lon);
+      const geoName = geoData.weather[0].main;
+      output(geoData);
+      await weatherGiphy(geoName);
+      document.getElementById('place').innerHTML = `${geoData.name}`;
+    });
+  } else {
+    const welcome = await fetch(`https://api.giphy.com/v1/gifs/ASd0Ukj0y3qMM?api_key=${key}`);
+    const welcomeData = await welcome.json();
+    document.getElementById('weather').src = welcomeData.data.images.original.url;
+  }
 }
 
 export default init;
