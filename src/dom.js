@@ -1,21 +1,69 @@
-import * as data from './weatherApi';
+import { getWeather, getGeoWeather } from './weatherApi';
 import weatherGiphy from './giphy';
 
-const output = async function() {
-    const city = document.getElementById('city');
-    document.getElementById('celsius').innerHTML = 'Celsius: ' + await data.weatherCelsius(city.value);
-    document.getElementById('fahrenheit').innerHTML = await data.weatherFahren(city.value);
-    document.getElementById('description').innerHTML = await data.weatherDesc(city.value);
+const radioForm = (kelvin) => {
+  const radioCelsius = document.getElementById('celsius');
+  const radioFahren = document.getElementById('fahrenheit');
+  const output = document.getElementById('output');
+  radioCelsius.onclick = () => { output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C`; };
+  radioFahren.onclick = () => { output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`; };
+};
+
+async function output(weatherData) {
+  const kelvin = parseFloat(weatherData.main.temp).toFixed(2);
+  const output = document.getElementById('output');
+  document.getElementById('description').innerHTML = `Status: ${weatherData.weather[0].description}`;
+  if (document.getElementById('celsius').checked) {
+    output.innerHTML = `${(kelvin - 273.15).toFixed(1)}°C`;
+  } else {
+    output.innerHTML = `${((kelvin - 273.15) * 9 / 5 + 32).toFixed(1)}°F`;
+  }
+  radioForm(kelvin);
 }
 
-const init = () => {
-    const city = document.getElementById('city');
-    const submit = document.getElementById('submit');
-    submit.onclick = async function() {
-        const weatherName = await data.weatherName(city.value);
-        await output();
-        await weatherGiphy(city.value.toLowerCase(), weatherName);
-    }
+async function button() {
+  const key = process.env.GIF_KEY;
+  const cityField = document.getElementById('city');
+  const city = cityField.value.toLowerCase();
+  const weatherData = await getWeather(city);
+  if (weatherData.message === undefined) {
+    const weatherName = weatherData.weather[0].main;
+    output(weatherData);
+    await weatherGiphy(weatherName);
+  } else {
+    const errorGif = await fetch(`https://api.giphy.com/v1/gifs/HKmW8g1pG0Rig?api_key=${key}`);
+    const errorData = await errorGif.json();
+    document.getElementById('weather').src = errorData.data.images.original.url;
+    document.getElementById('celsius').innerHTML = 'FAILED TASK BRO/SIS';
+    document.getElementById('description').innerHTML = '';
+    document.getElementById('fahrenheit').innerHTML = '';
+  }
+  document.getElementById('place').innerHTML = '';
+}
+
+async function init() {
+  const key = process.env.GIF_KEY;
+  const cityField = document.getElementById('city');
+  cityField.onclick = () => { cityField.value = ''; };
+  document.getElementById('celsius').checked = true;
+  const submit = document.getElementById('submit');
+  submit.onclick = () => button();
+
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const geoData = await getGeoWeather(lat, lon);
+      const geoName = geoData.weather[0].main;
+      output(geoData);
+      await weatherGiphy(geoName);
+      document.getElementById('place').innerHTML = `${geoData.name}`;
+    });
+  } else {
+    const welcome = await fetch(`https://api.giphy.com/v1/gifs/ASd0Ukj0y3qMM?api_key=${key}`);
+    const welcomeData = await welcome.json();
+    document.getElementById('weather').src = welcomeData.data.images.original.url;
+  }
 }
 
 export default init;
