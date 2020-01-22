@@ -1,5 +1,6 @@
 import { getWeather, getGeoWeather } from './weatherApi';
 import weatherGiphy from './giphy';
+import imgUsplash from './unsplash';
 
 const radioForm = (kelvin) => {
   const radioCelsius = document.getElementById('celsius');
@@ -29,6 +30,7 @@ async function button() {
   if (weatherData.message === undefined) {
     const weatherName = weatherData.weather[0].main;
     output(weatherData);
+    await imgUsplash(weatherName);
     await weatherGiphy(weatherName);
   } else {
     const errorGif = await fetch(`https://api.giphy.com/v1/gifs/HKmW8g1pG0Rig?api_key=${key}`);
